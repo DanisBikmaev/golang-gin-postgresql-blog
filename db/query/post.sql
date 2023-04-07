@@ -1,8 +1,8 @@
 -- name: CreatePost :one
 INSERT INTO posts (
-  title, body
+  title, body, user_id
 ) VALUES (
-  $1, $2
+  $1, $2, $3
 )
 RETURNING *;
 
@@ -13,12 +13,15 @@ LIMIT 1;
 
 -- name: ListPosts :many
 SELECT * FROM posts
-ORDER BY created_at;
+ORDER BY created_at
+LIMIT $1
+OFFSET $2;
 
 -- name: UpdatePost :one
 UPDATE posts
 SET title = $2,
-body = $3
+body = $3,
+user_id = $4
 WHERE id = $1
 RETURNING *;
 

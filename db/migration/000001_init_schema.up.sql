@@ -9,7 +9,7 @@ CREATE TABLE "posts" (
   "id" bigserial PRIMARY KEY,
   "title" varchar NOT NULL,
   "body" text NOT NULL,
-  "user_id" integer NOT NULL,
+  "user_id" bigint NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 

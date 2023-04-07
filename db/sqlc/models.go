@@ -13,7 +13,7 @@ type Post struct {
 	Title string `json:"title"`
 	// Content of the post
 	Body      string    `json:"body"`
-	UserID    int32     `json:"user_id"`
+	UserID    int64     `json:"user_id"`
 	CreatedAt time.Time `json:"created_at"`
 }
 

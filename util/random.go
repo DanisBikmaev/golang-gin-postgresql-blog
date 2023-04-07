@@ -34,3 +34,9 @@ func RandomUser() string {
 func RandomBio() string {
 	return RandomString(20)
 }
+func RandomTitle() string {
+	return RandomString(20)
+}
+func RandomBody() string {
+	return RandomString(100)
+}

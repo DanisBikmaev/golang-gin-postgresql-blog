@@ -11,20 +11,21 @@ import (
 
 const createPost = `-- name: CreatePost :one
 INSERT INTO posts (
-  title, body
+  title, body, user_id
 ) VALUES (
-  $1, $2
+  $1, $2, $3
 )
 RETURNING id, title, body, user_id, created_at
 `
 
 type CreatePostParams struct {
-	Title string `json:"title"`
-	Body  string `json:"body"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+	UserID int64  `json:"user_id"`
 }
 
 func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, error) {
-	row := q.db.QueryRowContext(ctx, createPost, arg.Title, arg.Body)
+	row := q.db.QueryRowContext(ctx, createPost, arg.Title, arg.Body, arg.UserID)
 	var i Post
 	err := row.Scan(
 		&i.ID,
@@ -68,10 +69,17 @@ func (q *Queries) GetPost(ctx context.Context, id int64) (Post, error) {
 const listPosts = `-- name: ListPosts :many
 SELECT id, title, body, user_id, created_at FROM posts
 ORDER BY created_at
+LIMIT $1
+OFFSET $2
 `
 
-func (q *Queries) ListPosts(ctx context.Context) ([]Post, error) {
-	rows, err := q.db.QueryContext(ctx, listPosts)
+type ListPostsParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) ListPosts(ctx context.Context, arg ListPostsParams) ([]Post, error) {
+	rows, err := q.db.QueryContext(ctx, listPosts, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -102,19 +110,26 @@ func (q *Queries) ListPosts(ctx context.Context) ([]Post, error) {
 const updatePost = `-- name: UpdatePost :one
 UPDATE posts
 SET title = $2,
-body = $3
+body = $3,
+user_id = $4
 WHERE id = $1
 RETURNING id, title, body, user_id, created_at
 `
 
 type UpdatePostParams struct {
-	ID    int64  `json:"id"`
-	Title string `json:"title"`
-	Body  string `json:"body"`
+	ID     int64  `json:"id"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+	UserID int64  `json:"user_id"`
 }
 
 func (q *Queries) UpdatePost(ctx context.Context, arg UpdatePostParams) (Post, error) {
-	row := q.db.QueryRowContext(ctx, updatePost, arg.ID, arg.Title, arg.Body)
+	row := q.db.QueryRowContext(ctx, updatePost,
+		arg.ID,
+		arg.Title,
+		arg.Body,
+		arg.UserID,
+	)
 	var i Post
 	err := row.Scan(
 		&i.ID,
