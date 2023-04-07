@@ -41,7 +41,7 @@ DELETE FROM posts
 WHERE id = $1
 `
 
-func (q *Queries) DeletePost(ctx context.Context, id int32) error {
+func (q *Queries) DeletePost(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deletePost, id)
 	return err
 }
@@ -52,7 +52,7 @@ WHERE id = $1
 LIMIT 1
 `
 
-func (q *Queries) GetPost(ctx context.Context, id int32) (Post, error) {
+func (q *Queries) GetPost(ctx context.Context, id int64) (Post, error) {
 	row := q.db.QueryRowContext(ctx, getPost, id)
 	var i Post
 	err := row.Scan(
@@ -108,7 +108,7 @@ RETURNING id, title, body, user_id, created_at
 `
 
 type UpdatePostParams struct {
-	ID    int32  `json:"id"`
+	ID    int64  `json:"id"`
 	Title string `json:"title"`
 	Body  string `json:"body"`
 }

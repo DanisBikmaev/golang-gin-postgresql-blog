@@ -1,8 +1,8 @@
 -- name: CreateUser :one
 INSERT INTO users (
-  username
+  username, bio
 ) VALUES (
-  $1
+  $1, $2
 )
 RETURNING *;
 
@@ -13,11 +13,13 @@ LIMIT 1;
 
 -- name: ListUsers :many
 SELECT * FROM users
-ORDER BY username;
+ORDER BY id
+LIMIT $1
+OFFSET $2;
 
 -- name: UpdateUser :one
 UPDATE users
-SET username = $2
+SET bio = $2
 WHERE id = $1
 RETURNING *;
 

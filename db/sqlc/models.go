@@ -9,7 +9,7 @@ import (
 )
 
 type Post struct {
-	ID    int32  `json:"id"`
+	ID    int64  `json:"id"`
 	Title string `json:"title"`
 	// Content of the post
 	Body      string    `json:"body"`
@@ -18,7 +18,8 @@ type Post struct {
 }
 
 type User struct {
-	ID        int32     `json:"id"`
+	ID        int64     `json:"id"`
 	Username  string    `json:"username"`
+	Bio       string    `json:"bio"`
 	CreatedAt time.Time `json:"created_at"`
 }

@@ -1,11 +1,12 @@
 CREATE TABLE "users" (
-  "id" integer PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "username" varchar NOT NULL,
+  "bio" text NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now())
 );
 
 CREATE TABLE "posts" (
-  "id" integer PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "title" varchar NOT NULL,
   "body" text NOT NULL,
   "user_id" integer NOT NULL,
